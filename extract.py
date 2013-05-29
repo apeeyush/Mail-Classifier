@@ -7,6 +7,12 @@ from stemming.porter2 import stem
 w=[]
 subd={}
 wordsd={}
+numbers=[]
+dollars=[]
+urls=[]
+emails=[]
+count_number=0
+count_dollar=0
 os.chdir("/media/Hardy/Acads/Projects/ML Project/enron_mail_20110402/maildir/arnold-j/compaq")
 mypath="/media/Hardy/Acads/Projects/ML Project/enron_mail_20110402/maildir/arnold-j/compaq"
 for fo in listdir(mypath):
@@ -17,7 +23,7 @@ for fo in listdir(mypath):
         match=re.search('subject:(.+)\n',fr.lower())
         if match:
             subl=subl+[w for w in re.split('\W',match.group(1)) if w]
-            print subl
+##            print subl
             for elements in subl:
                 element=stem(elements)
                 if element in subd:
@@ -37,6 +43,14 @@ for fo in listdir(mypath):
                 continue
             elif not ( re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()) ):
 ##                print line
+                numbers = numbers+re.findall(r'[0-9][0-9\-]+',line)
+                ##print numbers
+                dollars = dollars+re.findall(r'\$',line)
+                ##print dollars
+##                for number in numbers:
+##                    count_number+=1
+##                for dollar in dollars:
+##                    count_dollar+=1
                 wordsl=wordsl+[w for w in re.split('\W',line) if w]
             elif re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()):
                 break
@@ -46,9 +60,33 @@ for fo in listdir(mypath):
                 wordsd[element]+=1
             else:
                 wordsd[element]=1
-print subd.items()
-print wordsd.items()
+        f.close()
+        f=open(fo,"rU")
+##        count_mail=0
+##        count_url=0
+        for line in f:
+            if not ( re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()) ):
+##                print line
+                emails =emails + re.findall(r'\w+[.|\w]\w+@\w+[.]\w+[.|\w+]\w+',line)
+                ##urls = urls + re.findall(r'www.',line)
+##                for email in emails:
+##                    count_mail=count_mail+1
+##                for url in urls:
+##                    count_url=count_url+1
+            else :
+                break
+        f.close()
+##print numbers
+##print dollars
+##print urls
+##print emails
 
+##print subd.items()
+##print wordsd.items()
+##print count_number
+##print count_dollar
+##print count_url
+##print count_mail
 
 
 ######     I have to read about writing in a file so if u can then change the code below to write in file
@@ -61,11 +99,12 @@ print wordsd.items()
 ######
 ######     Below I have assumed that i have removed and filtered the dict for subj and words
 
+
+
 fw = open('workfile.txt', 'w')
-for elements in (subd and wordsd):
-    fw.write(elements)
-    fw.write(' ')
-fw.close()
+##for elements in (subd and wordsd):
+##    fw.write(elements)
+##    fw.write(' ')        
 for fo in listdir(mypath):
     if isfile(join(mypath,fo)):
         subd_temp={}
@@ -83,7 +122,7 @@ for fo in listdir(mypath):
                         subd_temp[element]+=1
                     else:
                         subd_temp[element]=1
-##        print subd_temp.items()
+        ##print subd_temp.items()
         f.close()
         f=open(fo,"rU")
         flag=0
@@ -106,4 +145,12 @@ for fo in listdir(mypath):
                     wordsd_temp[element]+=1
                 else:
                     wordsd_temp[element]=1
-##        print wordsd_temp.items()
+        for word in wordsd:
+            if word in wordsd_temp:
+                fw.write(str(wordsd_temp[word]))
+                fw.write(' ')
+            else:
+                fw.write('0 ')
+        fw.write('\n')
+            
+        ##print wordsd_temp.items()

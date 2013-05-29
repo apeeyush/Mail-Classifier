@@ -51,7 +51,7 @@ for fo in listdir(mypath):
 ##                    count_number+=1
 ##                for dollar in dollars:
 ##                    count_dollar+=1
-                wordsl=wordsl+[w for w in re.split('\W',line) if w]
+                wordsl=wordsl+[w for w in re.split('\W',line.lower()) if w]
             elif re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()):
                 break
         for elements in wordsl:
@@ -101,18 +101,20 @@ for fo in listdir(mypath):
 
 
 
-fw = open('workfile.txt', 'w')
-##for elements in (subd and wordsd):
-##    fw.write(elements)
-##    fw.write(' ')        
+fw = open('workfile.csv', 'w')
+for elements in (subd and wordsd):
+    fw.write(elements)
+    fw.write(',')
+fw.write('\n')
 for fo in listdir(mypath):
     if isfile(join(mypath,fo)):
         subd_temp={}
         wordsd_temp={}
         f=open(fo,"rw+")
         fr=f.read()
+        fr=fr.lower()
         subl=[]
-        match=re.search('subject:(.+)\n',fr.lower())
+        match=re.search('subject:(.+)\n',fr)
         if match:
             subl=subl+[w for w in re.split('\W',match.group(1)) if w]
             for elements in subl:
@@ -135,22 +137,27 @@ for fo in listdir(mypath):
                 continue
             elif not ( re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()) ):
 ##                print line
-                wordsl=wordsl+[w for w in re.split('\W',line) if w]
+                wordsl=wordsl+[w for w in re.split('\W',line.lower()) if w]
             elif re.search(r'forwarded by',line.lower()) or re.search(r'original message',line.lower()):
                 break
         for elements in wordsl:
             element=stem(elements)
             if element in wordsd:
+##                fw.write(element)
+##                fw.write(',')
                 if element in wordsd_temp:
+##                    fw.write(element)
+##                    fw.write(',')
                     wordsd_temp[element]+=1
                 else:
                     wordsd_temp[element]=1
+##        fw.write('\n')
         for word in wordsd:
             if word in wordsd_temp:
                 fw.write(str(wordsd_temp[word]))
-                fw.write(' ')
+                fw.write(',')
             else:
-                fw.write('0 ')
+                fw.write('0,')
         fw.write('\n')
             
         ##print wordsd_temp.items()

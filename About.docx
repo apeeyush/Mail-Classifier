@@ -8,7 +8,7 @@ Categorize Emails According to Senders (Creating a Gmail add-on for the same).
 
 Ideas for implementation : 
 We plan to use python, javascript and google APIs.
-We would use machine learning algorithms like SVM & Naive Bayes for this project implementation.
+We would use machine learning algorithms like SVM & Naive Bayes, Random forest for this project implementation.
 
 Utility:
 People nowadays encounter tons of emails everyday at work or in their daily life. The large quantities of emails keep causing confusions. Not only spam emails but also unwanted emails (e.g. advertisements) cause people to waste time on reading them. Therefore, it becomes urgent to develop reliable automatic categorization of emails to save the trouble. This project aims at developing an add-on for doing supervised and unsupervised classification of emails according to email content, in particular, putting emails into folders in terms of role of email senders. It will reduce the time required to check mails by automatically classifying the mails under various labels. We also intend to implement some semantic analysis for the same.
